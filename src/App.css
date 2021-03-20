@@ -1,38 +1,114 @@
-.App {
+body {
+  padding: 1rem;
+  font-family: Inter, sans-serif;
+  background-color: #ffffff;
+}
+
+button {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  line-height: 1.625;
+  font-weight: 500;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.75rem;
+  border-color: transparent;
+  background-color: #ffffff;
+}
+
+button:hover {
+  transition: 1s;
+  background-color: aqua;
+  color: blue;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+input {
+  border: none;
+  border-radius: 10px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0.75em;
+  margin-bottom: 0.75rem;
+  background-color: rgb(240, 239, 239);
+  color: black;
   text-align: center;
+  margin-left: 0.75rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+textarea {
+  border: none;
+  border-radius: 10px;
+  padding-top: 1rem;
+  margin-top: 0.75em;
+  background-color: rgb(240, 239, 239);
+  color: black;
+  text-align: center;
+  width: 600px;
+  height: 200px;
+  margin-left: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.controls {
+  display: block;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex: 0 0 50px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.categories {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  flex-direction: row;
+  justify-items: flex-start;
+  border-radius: 12px;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  z-index: 1;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 25px -17px rgba(0, 0, 0, 0.79);
 }
 
-.App-link {
-  color: #61dafb;
+.categories button {
+  flex: 0 5px 80px;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  padding-left: 0.75rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  display: grid;
+  column-gap: 10px;
+  grid-template-columns: 150px auto 300px;
+}
+
+.header {
+  font-size: small;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.bottom button p {
+  flex: 0 0 100px;
+}
+
+.card {
+  border-radius: 12px;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  z-index: 1;
+  background-color: #ffffff;
+  box-shadow: 1px 1px 25px -17px rgba(0, 0, 0, 0.79);
 }
