@@ -86,8 +86,42 @@ export const fetchCommentByID = (id) => {
   };
 };
 
-//Categories actions
+//for posting a comment
+export const postComments = (comment) => {
+  return () => {
+    axios.post('http://localhost:3001/comments', comment, {
+      headers: { Authorization: 'whatever-you-want' },
+    });
+  };
+};
 
+export const voteComments = (id, vote) => {
+  return () => {
+    axios.post(`http://localhost:3001/comments/${id}`, vote, {
+      headers: { Authorization: 'whatever-you-want' },
+    });
+  };
+};
+
+export const modifyComments = (id, details) => {
+  return () => {
+    axios.put(`http://localhost:3001/comments/${id}`, details, {
+      headers: { Authorization: 'whatever-you-want' },
+    });
+  };
+};
+
+//for deleting a comment using its ID
+export const deleteComment = (id) => {
+  return () => {
+    axios.delete(`http://localhost:3001/comments/${id}`, {
+      headers: { Authorization: 'whatever-you-want' },
+    });
+  };
+};
+
+//Categories actions
+//getting the categories supported by the app
 export const fetchCategories = () => {
   return async (dispatch) => {
     try {
@@ -103,6 +137,7 @@ export const fetchCategories = () => {
 
 //Post actions
 
+//creating a post
 export const publishPost = (post) => {
   return () => {
     axios.post('http://localhost:3001/posts', post, {
@@ -111,6 +146,7 @@ export const publishPost = (post) => {
   };
 };
 
+//getting all the posts
 export const fetchPosts = () => {
   return async (dispatch) => {
     try {
@@ -124,6 +160,7 @@ export const fetchPosts = () => {
   };
 };
 
+//getting a posts by thier categories
 export const fetchPostsByCategory = (category) => {
   return async (dispatch) => {
     try {
@@ -140,6 +177,7 @@ export const fetchPostsByCategory = (category) => {
   };
 };
 
+//getting a post with a unique ID
 export const fetchPostByID = (id) => {
   return async (dispatch) => {
     try {
@@ -169,6 +207,7 @@ export const votePost = (post_id, vote) => {
   };
 };
 
+//for deleting a post
 export const deletePost = (post_id) => {
   return () => {
     axios.delete(`http://localhost:3001/posts/${post_id}`, {

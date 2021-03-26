@@ -1,8 +1,14 @@
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { fetchPostByID, fetchCommentsByPost } from '../actions/action';
+import { useEffect, useState } from 'react';
+import {
+  fetchPostByID,
+  fetchCommentsByPost,
+  postComments,
+  deleteComment,
+} from '../actions/action';
 import { useSelector, useDispatch } from 'react-redux';
 import '../App.css';
+import { v4 as uuidv4 } from 'uuid';
 
 const Post = () => {
   const param = useParams();
@@ -10,9 +16,31 @@ const Post = () => {
   const id = param.id;
   const post = useSelector((state) => state.categories.postByID);
   const comments = useSelector((state) => state.categories.commentsByPost);
+  const [comment, setComment] = useState({
+    id: uuidv4(),
+    timestamp: Date.now(),
+    body: '',
+    author: '',
+    parentId: id,
+  });
   console.log(param.id);
   console.log(post == null ? null : post);
   console.log(comments == null ? null : comments);
+
+  const change = (e) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setComment((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const submitComment = (e) => {
+    e.preventDefault();
+    if (comment.body === '') {
+      console.log('Please provide the body of the comment');
+    } else {
+      dispatch(postComments(comment));
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchPostByID(id));
@@ -42,6 +70,23 @@ const Post = () => {
               <button>Edit</button> <button>Delete</button>
             </div>
             <hr />
+            <form onSubmit={submitComment}>
+              <textarea
+                type="text"
+                name="body"
+                value={comment.body}
+                onChange={change}
+              />
+              <input
+                type="text"
+                name="author"
+                value={comment.author}
+                onChange={change}
+              />
+              <br />
+              <button type="submit">Post</button>
+            </form>
+
             <h2>Comments</h2>
             {comments == null ? (
               <p>loading</p>
@@ -54,6 +99,9 @@ const Post = () => {
                   </div>
                   <p>{comment.body}</p>
                   <p>{comment.voteScore}</p>
+                  <button onClick={() => dispatch(deleteComment(comment.id))}>
+                    Delete
+                  </button>
                 </div>
               ))
             )}
