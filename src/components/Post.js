@@ -1,14 +1,16 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   fetchPostByID,
   fetchCommentsByPost,
   postComments,
   deleteComment,
-} from '../actions/action';
-import { useSelector, useDispatch } from 'react-redux';
-import '../App.css';
-import { v4 as uuidv4 } from 'uuid';
+  votePost,
+} from "../actions/action";
+import { useSelector, useDispatch } from "react-redux";
+import "../App.css";
+import { v4 as uuidv4 } from "uuid";
+import LineIcon from "react-lineicons";
 
 const Post = () => {
   const param = useParams();
@@ -19,10 +21,14 @@ const Post = () => {
   const [comment, setComment] = useState({
     id: uuidv4(),
     timestamp: Date.now(),
-    body: '',
-    author: '',
+    body: "",
+    author: "",
     parentId: id,
   });
+  const [upVote, setUpvote] = useState("violet");
+  const [downVote, setDownvote] = useState("violet");
+  const [flag, setFlag] = useState(false);
+  const [flag1, setFlag1] = useState(false);
   console.log(param.id);
   console.log(post == null ? null : post);
   console.log(comments == null ? null : comments);
@@ -35,10 +41,36 @@ const Post = () => {
 
   const submitComment = (e) => {
     e.preventDefault();
-    if (comment.body === '') {
-      console.log('Please provide the body of the comment');
+    if (comment.body === "") {
+      console.log("Please provide the body of the comment");
     } else {
       dispatch(postComments(comment));
+    }
+  };
+
+  const vote = (vote_id) => {
+    const UpVote = { option: "upVote" };
+    const DownVote = { option: "downVote" };
+    if (vote_id === 1) {
+      if (downVote === "blue") {
+        setDownvote("violet");
+      }
+      if (flag === false) {
+        upVote === "violet" ? setUpvote("blue") : setUpvote("violet");
+        dispatch(votePost(id, UpVote));
+        setFlag(true);
+        setFlag1(false);
+      }
+    } else {
+      if (upVote === "blue") {
+        setUpvote("violet");
+      }
+      if (flag1 === false) {
+        dispatch(votePost(id, DownVote));
+        downVote === "violet" ? setDownvote("blue") : setDownvote("violet");
+        setFlag1(true);
+        setFlag(false);
+      }
     }
   };
 
@@ -48,43 +80,61 @@ const Post = () => {
   }, [dispatch, id]);
 
   return (
-    <div className="container">
+    <div className='container'>
       <div></div>
       {post == null ? (
         <p>Loading</p>
       ) : (
         <>
-          <div key={post.id} className="card">
-            <div className="header">
+          <div key={post.id} className='card'>
+            <div className='header'>
               <h2>{post.author}</h2>
               <p>{new Date(post.timestamp).toUTCString()}</p>
               <p>{post.category}</p>
             </div>
             <h2>{post.title}</h2>
             <p>{post.body}</p>
-            <div className="bottom">
+            <div className='controls'>
+              <LineIcon
+                name='thumbs-up'
+                size='lg'
+                effect='burst'
+                tag='button'
+                style={{ color: upVote }}
+                onClick={() => vote(1)}
+              />
+              <LineIcon
+                name='thumbs-down'
+                size='lg'
+                effect='burst'
+                tag='button'
+                style={{ color: downVote }}
+                onClick={() => vote(2)}
+              />
+            </div>
+            <div className='bottom'>
               <button>{post.commentCount} comments</button>
               <p>{post.voteScore} votes</p>
             </div>
-            <div className="controls">
+            <div className='controls'>
               <button>Edit</button> <button>Delete</button>
             </div>
             <hr />
             <form onSubmit={submitComment}>
               <textarea
-                type="text"
-                name="body"
+                type='text'
+                name='body'
                 value={comment.body}
                 onChange={change}
               />
               <input
-                type="text"
-                name="author"
+                type='text'
+                name='author'
                 value={comment.author}
                 onChange={change}
               />
               <br />
-              <button type="submit">Post</button>
+              <button type='submit'>Post</button>
             </form>
 
             <h2>Comments</h2>
@@ -93,7 +143,7 @@ const Post = () => {
             ) : (
               comments.map((comment) => (
                 <div key={comment.id}>
-                  <div className="header">
+                  <div className='header'>
                     <h3>{comment.author}</h3>
                     <p>{new Date(comment.timestamp).toUTCString()}</p>
                   </div>

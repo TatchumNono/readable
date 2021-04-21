@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
 // actionType
-export const GET_CATEGORIES = 'GET_CATEGORIES';
-export const GET_POSTS = 'GET_POSTS';
-export const GET_POSTS_BY_CATEGORY = 'GET_POSTS_BY_CATEGORY';
-export const GET_POST_BY_ID = 'GET_POST_BY_ID';
-export const GET_COMMENTS_BY_POST = 'GET_COMMENTS_BY_POST';
-export const GET_COMMENT_BY_ID = 'GET_COMMENT_BY_ID';
+export const GET_CATEGORIES = "GET_CATEGORIES";
+export const GET_POSTS = "GET_POSTS";
+export const GET_POSTS_BY_CATEGORY = "GET_POSTS_BY_CATEGORY";
+export const GET_POST_BY_ID = "GET_POST_BY_ID";
+export const GET_COMMENTS_BY_POST = "GET_COMMENTS_BY_POST";
+export const GET_COMMENT_BY_ID = "GET_COMMENT_BY_ID";
 
 //action creators
 export const getCategories = (categories) => {
@@ -62,7 +62,7 @@ export const fetchCommentsByPost = (post_id) => {
       const response = await axios.get(
         `http://localhost:3001/posts/${post_id}/comments`,
         {
-          headers: { Authorization: 'whatever-you-want' },
+          headers: { Authorization: "whatever-you-want" },
         }
       );
       dispatch(getCommentsByPost(response.data));
@@ -77,7 +77,7 @@ export const fetchCommentByID = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`http://localhost:3001/comments/${id}`, {
-        headers: { Authorization: 'whatever-you-want' },
+        headers: { Authorization: "whatever-you-want" },
       });
       dispatch(getCommentByID(response.data));
     } catch (error) {
@@ -89,16 +89,16 @@ export const fetchCommentByID = (id) => {
 //for posting a comment
 export const postComments = (comment) => {
   return () => {
-    axios.post('http://localhost:3001/comments', comment, {
-      headers: { Authorization: 'whatever-you-want' },
+    axios.post("http://localhost:3001/comments", comment, {
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
 
-export const voteComments = (id, vote) => {
+export const voteComments = (post_id, vote) => {
   return () => {
-    axios.post(`http://localhost:3001/comments/${id}`, vote, {
-      headers: { Authorization: 'whatever-you-want' },
+    axios.post(`http://localhost:3001/comments/${post_id}`, vote, {
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -106,7 +106,7 @@ export const voteComments = (id, vote) => {
 export const modifyComments = (id, details) => {
   return () => {
     axios.put(`http://localhost:3001/comments/${id}`, details, {
-      headers: { Authorization: 'whatever-you-want' },
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -115,7 +115,7 @@ export const modifyComments = (id, details) => {
 export const deleteComment = (id) => {
   return () => {
     axios.delete(`http://localhost:3001/comments/${id}`, {
-      headers: { Authorization: 'whatever-you-want' },
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -125,8 +125,8 @@ export const deleteComment = (id) => {
 export const fetchCategories = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get('http://localhost:3001/categories', {
-        headers: { Authorization: 'whatever-you-want' },
+      const response = await axios.get("http://localhost:3001/categories", {
+        headers: { Authorization: "whatever-you-want" },
       });
       dispatch(getCategories(response.data));
     } catch (error) {
@@ -140,8 +140,8 @@ export const fetchCategories = () => {
 //creating a post
 export const publishPost = (post) => {
   return () => {
-    axios.post('http://localhost:3001/posts', post, {
-      headers: { Authorization: 'whatever-you-want' },
+    axios.post("http://localhost:3001/posts", post, {
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -150,8 +150,8 @@ export const publishPost = (post) => {
 export const fetchPosts = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get('http://localhost:3001/posts', {
-        headers: { Authorization: 'whatever-you-want' },
+      const response = await axios.get("http://localhost:3001/posts", {
+        headers: { Authorization: "whatever-you-want" },
       });
       dispatch(getPosts(response.data));
     } catch (error) {
@@ -167,7 +167,7 @@ export const fetchPostsByCategory = (category) => {
       const response = await axios.get(
         `http://localhost:3001/${category}/posts`,
         {
-          headers: { Authorization: 'whatever-you-want' },
+          headers: { Authorization: "whatever-you-want" },
         }
       );
       dispatch(getPostsByCategory(response.data));
@@ -182,7 +182,7 @@ export const fetchPostByID = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`http://localhost:3001/posts/${id}`, {
-        headers: { Authorization: 'whatever-you-want' },
+        headers: { Authorization: "whatever-you-want" },
       });
       dispatch(getPostByID(response.data));
     } catch (error) {
@@ -194,7 +194,7 @@ export const fetchPostByID = (id) => {
 export const editPost = (post_id, details) => {
   return () => {
     axios.put(`http://localhost:3001/posts/${post_id}`, details, {
-      headers: { Authorization: 'whatever-you-want' },
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -202,7 +202,7 @@ export const editPost = (post_id, details) => {
 export const votePost = (post_id, vote) => {
   return () => {
     axios.post(`http://localhost:3001/posts/${post_id}`, vote, {
-      headers: { Authorization: 'whatever-you-want' },
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
@@ -211,7 +211,7 @@ export const votePost = (post_id, vote) => {
 export const deletePost = (post_id) => {
   return () => {
     axios.delete(`http://localhost:3001/posts/${post_id}`, {
-      headers: { Authorization: 'whatever-you-want' },
+      headers: { Authorization: "whatever-you-want" },
     });
   };
 };
