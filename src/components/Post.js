@@ -1,5 +1,8 @@
+import { v4 as uuidv4 } from "uuid";
+import LineIcon from "react-lineicons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   fetchPostByID,
   fetchCommentsByPost,
@@ -7,10 +10,7 @@ import {
   deleteComment,
   votePost,
 } from "../actions/action";
-import { useSelector, useDispatch } from "react-redux";
 import "../App.css";
-import { v4 as uuidv4 } from "uuid";
-import LineIcon from "react-lineicons";
 
 const Post = () => {
   const param = useParams();
@@ -41,10 +41,13 @@ const Post = () => {
 
   const submitComment = (e) => {
     e.preventDefault();
-    if (comment.body === "") {
-      console.log("Please provide the body of the comment");
+    if (comment.body === "" || comment.author === "") {
+      console.log("Please provide the body or author of the comment");
     } else {
       dispatch(postComments(comment));
+      setTimeout(() => {
+        dispatch(fetchPostByID(id));
+      }, 2000);
     }
   };
 
@@ -60,6 +63,7 @@ const Post = () => {
         dispatch(votePost(id, UpVote));
         setFlag(true);
         setFlag1(false);
+        dispatch(fetchPostByID(id));
       }
     } else {
       if (upVote === "blue") {
@@ -70,11 +74,22 @@ const Post = () => {
         downVote === "violet" ? setDownvote("blue") : setDownvote("violet");
         setFlag1(true);
         setFlag(false);
+        dispatch(fetchPostByID(id));
       }
     }
   };
 
+  const postHandle = () => {
+    setTimeout(() => {
+      setComment({ body: "", author: "" });
+      dispatch(fetchCommentsByPost(id));
+    }, 2000);
+  };
+
   useEffect(() => {
+    /* setInterval(() => {
+      dispatch(fetchPostByID(id));
+    }, 2000); */
     dispatch(fetchPostByID(id));
     dispatch(fetchCommentsByPost(id));
   }, [dispatch, id]);
@@ -113,7 +128,6 @@ const Post = () => {
               />
             </div>
             <div className='bottom'>
-              <button>{post.commentCount} comments</button>
               <p>{post.voteScore} votes</p>
             </div>
             <div className='controls'>
@@ -127,6 +141,7 @@ const Post = () => {
                 value={comment.body}
                 onChange={change}
               />
+              <br />
               <input
                 type='text'
                 name='author'
@@ -134,10 +149,13 @@ const Post = () => {
                 onChange={change}
               />
               <br />
-              <button type='submit'>Post</button>
+              <button onClick={postHandle} type='submit'>
+                Post
+              </button>
             </form>
 
             <h2>Comments</h2>
+            <p>{post.commentCount} comments</p>
             {comments == null ? (
               <p>loading</p>
             ) : (
@@ -148,7 +166,7 @@ const Post = () => {
                     <p>{new Date(comment.timestamp).toUTCString()}</p>
                   </div>
                   <p>{comment.body}</p>
-                  <p>{comment.voteScore}</p>
+                  <p>{comment.voteScore} vote</p>
                   <button onClick={() => dispatch(deleteComment(comment.id))}>
                     Delete
                   </button>

@@ -1,19 +1,21 @@
-import '../App.css';
-import { useState, useEffect } from 'react';
-import { publishPost, fetchCategories } from '../actions/action';
-import { useSelector, useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
+import "../App.css";
+import { useState, useEffect } from "react";
+import { publishPost, fetchCategories } from "../actions/action";
+import { useSelector, useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { useHistory } from "react-router-dom";
 
 const Create = () => {
   const [post, setPost] = useState({
     id: uuidv4(),
     timestamp: Date.now(),
-    title: '',
-    body: '',
-    author: '',
-    category: '',
+    title: "",
+    body: "",
+    author: "",
+    category: "",
   });
 
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const Submit = (e) => {
@@ -34,48 +36,48 @@ const Create = () => {
   const categories = useSelector((state) => state.categories.categories);
 
   return (
-    <div className="container">
+    <div className='container'>
       <div></div>
-      <div className="card">
+      <div className='card'>
         <form
           onSubmit={Submit}
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}>
           <label>
             Title:
             <input
-              type="text"
-              name="title"
+              type='text'
+              name='title'
               value={post.title}
               onChange={Changes}
-              aria-label="title"
+              aria-label='title'
             />
           </label>
           <label>
             Body:
             <textarea
-              type="text"
-              name="body"
+              type='text'
+              name='body'
               value={post.body}
               onChange={Changes}
-              aria-label="body"
+              aria-label='body'
             />
           </label>
           <label>
             Author:
             <input
-              type="text"
-              name="author"
+              type='text'
+              name='author'
               value={post.author}
               onChange={Changes}
-              aria-label="author"
+              aria-label='author'
             />
           </label>
 
-          <select name="category" value={post.category} onChange={Changes}>
+          <select name='category' value={post.category} onChange={Changes}>
             {categories == null ? (
               <option>no CATEGORIES YET</option>
             ) : (
@@ -89,7 +91,15 @@ const Create = () => {
             )}
           </select>
 
-          <button type="submit">Submit</button>
+          <button
+            onClick={() =>
+              setTimeout(() => {
+                history.goBack();
+              }, 1000)
+            }
+            type='submit'>
+            Submit
+          </button>
         </form>
       </div>
       <div></div>
