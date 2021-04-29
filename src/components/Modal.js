@@ -1,14 +1,14 @@
-import { createPortal } from 'react-dom';
+import { createPortal } from "react-dom";
 import {
   useState,
   useEffect,
   useCallback,
   useImperativeHandle,
   forwardRef,
-} from 'react';
-import './modal.css';
+} from "react";
+import "./modal.css";
 
-const modalElement = document.getElementById('modal-root');
+const modalElement = document.getElementById("modal-root");
 
 /*the 'children' key word is the props recieved from the parent component
 It is destructred directly in the modal function and used just by writing children instead of props.children
@@ -16,7 +16,7 @@ It is destructred directly in the modal function and used just by writing childr
 const Modal = ({ children, defaultOpened = false }, ref) => {
   const [isOpen, setIsOpen] = useState(defaultOpened);
 
-  //this hook is used tomake the states accessible to the parents components when using useRef
+  //this hook is used to make the states and functions accessible to the parents components when using useRef
   useImperativeHandle(
     ref,
     () => ({
@@ -31,12 +31,14 @@ const Modal = ({ children, defaultOpened = false }, ref) => {
   }, []);
 
   useEffect(() => {
-    if (isOpen) document.addEventListener('keydown', handleEscape, false);
-    return () => document.removeEventListener('keydown', handleEscape, false);
+    if (isOpen) document.addEventListener("keydown", handleEscape, false);
+    return () => document.removeEventListener("keydown", handleEscape, false);
   }, [handleEscape, isOpen]);
 
+  console.log(isOpen);
+
   return createPortal(
-    isOpen ? <div className="modal">{children}</div> : null,
+    isOpen ? <div className='modal'>{children}</div> : null,
     modalElement
   );
 };

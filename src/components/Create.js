@@ -20,7 +20,9 @@ const Create = () => {
 
   const Submit = (e) => {
     e.preventDefault();
-    dispatch(publishPost(post));
+    post.category === ""
+      ? alert("Please choose a cayegory first")
+      : dispatch(publishPost(post));
   };
 
   useEffect(() => {
@@ -78,6 +80,7 @@ const Create = () => {
           </label>
 
           <select name='category' value={post.category} onChange={Changes}>
+            <option>choose</option>
             {categories == null ? (
               <option>no CATEGORIES YET</option>
             ) : (
