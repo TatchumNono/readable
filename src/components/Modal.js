@@ -35,8 +35,6 @@ const Modal = ({ children, defaultOpened = false }, ref) => {
     return () => document.removeEventListener("keydown", handleEscape, false);
   }, [handleEscape, isOpen]);
 
-  console.log(isOpen);
-
   return createPortal(
     isOpen ? <div className='modal'>{children}</div> : null,
     modalElement

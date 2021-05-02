@@ -3,7 +3,7 @@ import LineIcon from "react-lineicons";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   fetchPostByID,
   fetchCommentsByPost,
@@ -11,19 +11,23 @@ import {
   deleteComment,
   deletePost,
   votePost,
-  editPost,
 } from "../actions/action";
 import "../App.css";
 import "./modal.css";
-import Modal from "./Modal";
+import DeleteConfirm from "./Modals/DeleteConfirm";
+import EditPost from "./Modals/EditPost";
+import Error from "./Modals/Error";
+import EditComment from "./Modals/EditComment";
 
 const Post = () => {
-  const modal = useRef(null);
-  const postModal = useRef(null);
+  const commentDeleteConfirmModal = useRef(null);
+  const postDeleteConfirmModal = useRef(null);
   const postError = useRef(null);
   const postEditModal = useRef(null);
+  const commentEditModal = useRef(null);
   const param = useParams();
   const route = useHistory();
+  let location = useLocation();
   const dispatch = useDispatch();
   const id = param.id;
   const post = useSelector((state) => state.categories.postByID);
@@ -35,17 +39,15 @@ const Post = () => {
     author: "",
     parentId: id,
   });
-  const [edit, setPost] = useState({
-    title: "",
-    body: "",
-  });
+
   const [upVote, setUpvote] = useState("violet");
   const [downVote, setDownvote] = useState("violet");
   const [flag, setFlag] = useState(false);
   const [flag1, setFlag1] = useState(false);
-  console.log(param.id);
-  console.log(post == null ? null : post);
-  console.log(comments == null ? null : comments);
+  //console.log(param.id);
+  //console.log(post == null ? null : post);
+  //console.log(comments == null ? null : comments);
+  console.log(location);
 
   const change = (e) => {
     let name = e.target.name;
@@ -60,19 +62,6 @@ const Post = () => {
       postError.current.open();
     } else {
       dispatch(postComments(comment));
-      //setTimeout(() => {
-      //  dispatch(fetchPostByID(id));
-      //}, 2000);
-    }
-  };
-
-  const submitEditedPost = (e) => {
-    e.preventDefault();
-    if (edit.body === "" || edit.title === "") {
-      console.log("Please provide the body or author of the comment");
-      postError.current.open();
-    } else {
-      dispatch(editPost(id, edit));
     }
   };
 
@@ -107,43 +96,27 @@ const Post = () => {
   const postHandle = () => {
     setTimeout(() => {
       setComment({ body: "", author: "" });
-      dispatch(fetchCommentsByPost(id));
+      route.replace(location.pathname);
     }, 1000);
-  };
-
-  const change1 = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    setPost((prev) => ({ prev, [name]: value }));
   };
 
   const commentDeleteHandle = (post_id) => {
     dispatch(deleteComment(post_id));
+    setTimeout(() => {
+      commentDeleteConfirmModal.current.close();
+      route.push(location.pathname);
+    }, 1000);
   };
 
   const postDeleteHandle = (post_id) => {
     dispatch(deletePost(post_id));
     setTimeout(() => {
-      route.push("/");
+      postDeleteConfirmModal.current.close();
+      route.replace(location.pathname);
     }, 1000);
   };
 
-  const openConfirm = () => {
-    modal.current.open();
-    console.log("ok");
-  };
-
-  const closeConfirm = () => {
-    modal.current.close();
-    postModal.current.close();
-    postError.current.close();
-    postEditModal.current.close();
-  };
-
   useEffect(() => {
-    /* setInterval(() => {
-      dispatch(fetchPostByID(id));
-    }, 2000); */
     dispatch(fetchPostByID(id));
     dispatch(fetchCommentsByPost(id));
   }, [dispatch, id]);
@@ -186,7 +159,9 @@ const Post = () => {
             </div>
             <div className='controls'>
               <button onClick={() => postEditModal.current.open()}>Edit</button>{" "}
-              <button onClick={() => postModal.current.open()}>Delete</button>
+              <button onClick={() => postDeleteConfirmModal.current.open()}>
+                Delete
+              </button>
             </div>
             <hr />
             <form onSubmit={submitComment}>
@@ -223,67 +198,42 @@ const Post = () => {
                     </div>
                     <p>{comment.body}</p>
                     <p>{comment.voteScore} vote</p>
-                    <button onClick={openConfirm}>Delete</button>
+                    <button onClick={() => commentEditModal.current.open()}>
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => commentDeleteConfirmModal.current.open()}>
+                      Delete
+                    </button>
                   </div>
 
-                  <Modal ref={modal}>
-                    <div className='card'>
-                      <h1>Confirm!</h1>
-                      <p>Do you want to delete this comment</p>
-                      <button onClick={closeConfirm}>Cancel</button>
-                      <button onClick={() => commentDeleteHandle(comment.id)}>
-                        Delete
-                      </button>
-                    </div>
-                  </Modal>
+                  <DeleteConfirm
+                    message='Comment'
+                    state={commentDeleteConfirmModal}
+                    method={commentDeleteHandle}
+                    id={comment.id}
+                  />
+
+                  <EditComment
+                    state={commentEditModal}
+                    id={comment.id}
+                    error={postError}
+                  />
                 </div>
               ))
             )}
           </div>
-          <Modal ref={postModal}>
-            <div className='card'>
-              <h1>Confirm!</h1>
-              <p>Do you want to delete this Post</p>
-              <button onClick={closeConfirm}>Cancel</button>
-              <button onClick={() => postDeleteHandle(post.id)}>Delete</button>
-            </div>
-          </Modal>
 
-          <Modal ref={postError}>
-            <div className='card'>
-              <h1>Error</h1>
-              <p>Please provide the body or author of the comment</p>
-              <button onClick={closeConfirm}>Cancel</button>
-            </div>
-          </Modal>
+          <DeleteConfirm
+            message='Post'
+            state={postDeleteConfirmModal}
+            method={postDeleteHandle}
+            id={post.id}
+          />
 
-          <Modal ref={postEditModal}>
-            <div className='card'>
-              <h1>Edit</h1>
-              <form onSubmit={submitEditedPost}>
-                <input
-                  type='text'
-                  name='title'
-                  value={edit.title}
-                  onChange={change1}
-                />
-                <br />
-                <textarea
-                  type='text'
-                  name='body'
-                  value={edit.body}
-                  onChange={change1}
-                />
-                <br />
-                <button onClick={postHandle} type='submit'>
-                  Post
-                </button>
-              </form>
-              <button onClick={() => postEditModal.current.close()}>
-                Cancel
-              </button>
-            </div>
-          </Modal>
+          <Error state={postError} />
+
+          <EditPost state={postEditModal} id={id} error={postError} />
         </>
       )}
       <div></div>
